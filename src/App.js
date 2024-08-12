@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import CreateAccount from './components/CreateAccount';
-import LoginPage from './components/CreateAccountWithValidation';
-import NextScreen from './components/NextScreen';
-import VerificationCode from './components/VerificationCode';
-import Profilebuilding from './components/Profile-Building/ProfileForm';
-import ProfilePicture from './components/Profile-Building/ProfilePicture';
-import MainPage from './components/Home-Page/MainPage';
-import Cards from './components/Home-Page/Cards';
-import JobPosting from './components/Home-Page/ApplyCards';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { counterContext } from "./context/context";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import CreateAccount from "./components/SignUpLogin/CreateAccount";
+import LoginPage from "./components/SignUpLogin/CreateAccountWithValidation";
+import NextScreen from "./components/SignUpLogin/NextScreen";
+import VerificationCode from "./components/SignUpLogin/VerificationCode";
+import Profilebuilding from "./components/ProfileBuilding/ProfileForm";
+import ProfilePicture from "./components/ProfileBuilding/ProfilePicture";
+import MainPage from "./components/HomePage/MainPage";
+import Cards from "./components/HomePage/Cards";
+import JobPosting from "./components/HomePage/ApplyCards";
 
 const App = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -17,24 +18,34 @@ const App = () => {
   const handleCardClick = (job) => {
     setSelectedJob(job);
   };
-
+  const [count, setCount] = useState(0);
   return (
-    <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
-      <Router>
-        <Routes>
-          <Route path="/" element={<CreateAccount />} />
-          <Route path="/create-account" element={<CreateAccount />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/verification" element={<VerificationCode />} />
-          <Route path="/next-screen" element={<NextScreen />} />
-          <Route path="/profilebuilding" element={<Profilebuilding />} />
-          <Route path="/profilepicture" element={<ProfilePicture />} />
-          <Route path="/MainPage" element={<MainPage />} />
-          <Route path="/cards" element={<Cards onCardClick={handleCardClick} />} />
-          <Route path="/job-posting" element={<JobPosting job={selectedJob} />} />
-        </Routes>
-      </Router>
-    </GoogleOAuthProvider>
+    <>
+      <counterContext.Provider value={count}>
+        <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
+          <Router>
+            <Routes>
+              <Route path="/" element={<CreateAccount />} />
+              <Route path="/create-account" element={<CreateAccount />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/verification" element={<VerificationCode />} />
+              <Route path="/next-screen" element={<NextScreen />} />
+              <Route path="/profilebuilding" element={<Profilebuilding />} />
+              <Route path="/profilepicture" element={<ProfilePicture />} />
+              <Route path="/MainPage" element={<MainPage />} />
+              <Route
+                path="/cards"
+                element={<Cards onCardClick={handleCardClick} />}
+              />
+              <Route
+                path="/job-posting"
+                element={<JobPosting job={selectedJob} />}
+              />
+            </Routes>
+          </Router>
+        </GoogleOAuthProvider>
+      </counterContext.Provider>
+    </>
   );
 };
 
