@@ -10,7 +10,7 @@ import Profilebuilding from "./components/ProfileBuilding/ProfileForm";
 import ProfilePicture from "./components/ProfileBuilding/ProfilePicture";
 import MainPage from "./components/HomePage/MainPage";
 import Cards from "./components/HomePage/Cards";
-import JobPosting from "./components/HomePage/ApplyCards";
+import JobPosting from "./components/HomePage/JobPosting";
 
 const App = () => {
   const [selectedJob, setSelectedJob] = useState(null);
