@@ -11,6 +11,7 @@ import ProfilePicture from "./components/ProfileBuilding/ProfilePicture";
 import MainPage from "./components/HomePage/MainPage";
 import Cards from "./components/HomePage/Cards";
 import JobPosting from "./components/HomePage/JobPosting";
+import MainPage2 from "./components/HomePage2/MainPage2";
 
 const App = () => {
   const [selectedJob, setSelectedJob] = useState(null);
@@ -33,6 +34,7 @@ const App = () => {
               <Route path="/profilebuilding" element={<Profilebuilding />} />
               <Route path="/profilepicture" element={<ProfilePicture />} />
               <Route path="/MainPage" element={<MainPage />} />
+              <Route path="/MainPage2" element={<MainPage2/>} />
               <Route
                 path="/cards"
                 element={<Cards onCardClick={handleCardClick} />}
