@@ -26,7 +26,7 @@ const App = () => {
         <GoogleOAuthProvider clientId="YOUR_CLIENT_ID">
           <Router>
             <Routes>
-              <Route path="/" element={<CreateAccount />} />
+              <Route path="/" element={<MainPage2/>} />
               <Route path="/create-account" element={<CreateAccount />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/verification" element={<VerificationCode />} />

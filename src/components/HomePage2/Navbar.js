@@ -3,8 +3,8 @@ import { useTabContext } from './HomePageContext/HomePageContext';
 const Navbar = () => {
   const{fine}=useTabContext()
   return (
-    <div className="bg-gray-800 text-white p-4">
-      {fine}
+    <div className="bg-white-800 text-white p-4">
+      
       Navbar
     </div>
   );
