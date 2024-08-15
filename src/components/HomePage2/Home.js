@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Homeimage from "../../assets/Home-Image.png";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt, faClock, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faClock, faDollarSign, faHeart } from '@fortawesome/free-solid-svg-icons';
+import ApplyCards from './ApplyCards';
+import { useTabContext } from './HomePageContext/HomePageContext';
 
-const JobListing = () => {
-  // Job data array
+const Home = () => {
+  const { savedJobs, saveJob, removeJob } = useTabContext();
+  const [selectedJob, setSelectedJob] = useState(null);
+
   const jobData = [
     {
       jobTitle: 'Data Science Intern',
@@ -44,43 +48,79 @@ const JobListing = () => {
     },
   ];
 
+  const handleViewDetails = (job) => {
+    setSelectedJob(job);
+  };
+
+  const handleBack = () => {
+    setSelectedJob(null);
+  };
+
+  const toggleSaveJob = (job) => {
+    if (savedJobs.includes(job)) {
+      removeJob(job);
+    } else {
+      saveJob(job);
+    }
+  };
+
   return (
     <div className="font-poppins">
-      {/* Header Section */}
-      <div className="relative w-full h-96">
-        <img src={Homeimage} alt="Finding Your Dream Job" className="w-full h-full object-cover" />
-      </div>
+      {selectedJob ? (
+        <ApplyCards job={selectedJob} onBack={handleBack} />
+      ) : (
+        <>
+          <div className="relative w-full h-96">
+            <img src={Homeimage} alt="Finding Your Dream Job" className="w-full h-full object-cover" />
+          </div>
 
-      {/* Job Recommendations Section */}
-      <section className="py-10 px-6">
-        <h2 className="text-3xl font-bold mb-2">Find your next role</h2>
-        <p className="text-gray-600 mb-6">Recommendations based on your profile</p>
+          <section className="py-10 px-6">
+            <h2 className="text-3xl font-bold mb-2">Find your next role</h2>
+            <p className="text-gray-600 mb-6">Recommendations based on your profile</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          {jobData.map((job, index) => (
-            <div key={index} className="border rounded-lg p-6 shadow-sm">
-              <div className="flex items-center mb-4">
-                <img src="/path-to-company-logo.png" alt="Company Logo" className="w-12 h-12 rounded-full mr-4" />
-                <div>
-                  <h3 className="text-xl font-semibold">{job.jobTitle}</h3>
-                  <p className="text-gray-600">{job.company} • {index + 1}d ago</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+              {jobData.map((job, index) => (
+                <div key={index} className="relative border rounded-lg p-6 shadow-sm">
+                  <div className="absolute top-2 right-2">
+                    <button
+                      onClick={() => toggleSaveJob(job)}
+                      className="text-gray-500 hover:text-red-500"
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        className={`${savedJobs.includes(job) ? 'text-red-500' : 'text-gray-500'} w-6 h-6`}
+                      />
+                    </button>
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <img src="/path-to-company-logo.png" alt="Company Logo" className="w-12 h-12 rounded-full mr-4" />
+                    <div>
+                      <h3 className="text-xl font-semibold">{job.jobTitle}</h3>
+                      <p className="text-gray-600">{job.company} • {index + 1}d ago</p>
+                    </div>
+                  </div>
+                  <div className="text-gray-600 mb-4">
+                    <p><FontAwesomeIcon icon={faMapMarkerAlt} /> {job.location} • {job.type}</p>
+                    <p><FontAwesomeIcon icon={faClock} /> {job.duration}</p>
+                    <p><FontAwesomeIcon icon={faDollarSign} /> {job.salary}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">{job.field}</span>
+                    <button
+                      className="text-purple-600 hover:underline"
+                      onClick={() => handleViewDetails(job)}
+                    >
+                      View details
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="text-gray-600 mb-4">
-                <p><FontAwesomeIcon icon={faMapMarkerAlt} /> {job.location} • {job.type}</p>
-                <p><FontAwesomeIcon icon={faClock} /> {job.duration}</p>
-                <p><FontAwesomeIcon icon={faDollarSign} /> {job.salary}</p>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">{job.field}</span>
-                <button className="text-purple-600 hover:underline">View details</button>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </div>
   );
 };
 
-export default JobListing;
+export default Home;

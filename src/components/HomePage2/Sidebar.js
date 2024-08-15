@@ -1,86 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faPlane, faSearch, faEnvelope, faFileAlt, faHeart, faUser, faLifeRing, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelopeOpen } from '@fortawesome/free-regular-svg-icons';
+import { faHome, faPlane, faSearch, faEnvelopeOpen, faFileAlt, faHeart, faUser, faLifeRing, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import logo from "../../assets/Skillnaav-logo.png"; // Replace with your actual logo path
 import { useTabContext } from './HomePageContext/HomePageContext'; // Adjust path as needed
 
 const Sidebar = () => {
+  const [selectedTab, setSelectedTab] = useState('home');
   const { handleSelectTab } = useTabContext();
 
+  const handleTabClick = (tab) => {
+    setSelectedTab(tab);
+    handleSelectTab(tab);
+  };
+
   return (
-    <div className="w-64 h-screen bg-white flex flex-col justify-between p-6 font-poppins shadow-lg">
+    <div className="w-64 h-screen bg-white flex flex-col justify-between p-6 font-poppins shadow-lg sticky top-0">
       {/* Logo Section */}
       <div className="flex items-center mb-8">
-        <img src={logo} alt="Skillnaav Logo" className="w-250 h-96px mr-3" />
+        <img src={logo} alt="Skillnaav Logo" className="w-950 h-96px mr-3" />
       </div>
 
       {/* Navigation Links */}
       <nav className="flex-1">
         <ul className="space-y-2">
-          <li>
-            <button
-              onClick={() => handleSelectTab('home')}
-              className="flex items-center p-3 text-purple-700 bg-purple-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faHome} className="w-5 h-5 mr-3" />
-              <span>Homepage</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('aeronautical-jobs')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faPlane} className="w-5 h-5 mr-3" />
-              <span>Aeronautical jobs</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('search')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faSearch} className="w-5 h-5 mr-3" />
-              <span>Search</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('messages')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faEnvelopeOpen} className="w-5 h-5 mr-3" />
-              <span>Messages</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('applications')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faFileAlt} className="w-5 h-5 mr-3" />
-              <span>Applications</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('saved-jobs')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faHeart} className="w-5 h-5 mr-3" />
-              <span>Saved jobs</span>
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => handleSelectTab('profile')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
-            >
-              <FontAwesomeIcon icon={faUser} className="w-5 h-5 mr-3" />
-              <span>Profile</span>
-            </button>
-          </li>
+          {[
+            { id: 'home', icon: faHome, label: 'Homepage' },
+            { id: 'aeronautical-jobs', icon: faPlane, label: 'Aeronautical jobs' },
+            { id: 'searchbar', icon: faSearch, label: 'Search' },
+            { id: 'messages', icon: faEnvelopeOpen, label: 'Messages' },
+            { id: 'applications', icon: faFileAlt, label: 'Applications' },
+            { id: 'saved-jobs', icon: faHeart, label: 'Saved jobs' },
+            { id: 'profile', icon: faUser, label: 'Profile' },
+          ].map(({ id, icon, label }) => (
+            <li key={id}>
+              <button
+                onClick={() => handleTabClick(id)}
+                className={`flex items-center p-3 rounded-lg w-full text-left font-medium ${
+                  selectedTab === id
+                    ? 'bg-[#F0DEFD] text-[#7520A9]'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={icon}
+                  className={`w-5 h-5 mr-3 ${
+                    selectedTab === id
+                      ? 'text-[#7520A9]'
+                      : 'text-gray-600'
+                  }`}
+                />
+                <span
+                  className={`${
+                    selectedTab === id
+                      ? 'text-[#7520A9]'
+                      : 'text-gray-600'
+                  }`}
+                >
+                  {label}
+                </span>
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -89,20 +69,58 @@ const Sidebar = () => {
         <ul className="space-y-2">
           <li>
             <button
-              onClick={() => handleSelectTab('support')}
-              className="flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg w-full text-left"
+              onClick={() => handleTabClick('support')}
+              className={`flex items-center p-3 rounded-lg w-full text-left font-medium ${
+                selectedTab === 'support'
+                  ? 'bg-[#F0DEFD] text-[#7520A9]'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
             >
-              <FontAwesomeIcon icon={faLifeRing} className="w-5 h-5 mr-3" />
-              <span>Support</span>
+              <FontAwesomeIcon
+                icon={faLifeRing}
+                className={`w-5 h-5 mr-3 ${
+                  selectedTab === 'support'
+                    ? 'text-[#7520A9]'
+                    : 'text-gray-600'
+                }`}
+              />
+              <span
+                className={`${
+                  selectedTab === 'support'
+                    ? 'text-[#7520A9]'
+                    : 'text-gray-600'
+                }`}
+              >
+                Support
+              </span>
             </button>
           </li>
           <li>
             <button
-              onClick={() => handleSelectTab('logout')}
-              className="flex items-center p-3 text-red-600 hover:bg-red-100 rounded-lg w-full text-left"
+              onClick={() => handleTabClick('logout')}
+              className={`flex items-center p-3 rounded-lg w-full text-left font-medium ${
+                selectedTab === 'logout'
+                  ? 'bg-[#F0DEFD] text-[#7520A9]'
+                  : 'text-red-600 hover:bg-red-100'
+              }`}
             >
-              <FontAwesomeIcon icon={faSignOutAlt} className="w-5 h-5 mr-3" />
-              <span>Logout</span>
+              <FontAwesomeIcon
+                icon={faSignOutAlt}
+                className={`w-5 h-5 mr-3 ${
+                  selectedTab === 'logout'
+                    ? 'text-[#7520A9]'
+                    : 'text-red-600'
+                }`}
+              />
+              <span
+                className={`${
+                  selectedTab === 'logout'
+                    ? 'text-[#7520A9]'
+                    : 'text-red-600'
+                }`}
+              >
+                Logout
+              </span>
             </button>
           </li>
         </ul>

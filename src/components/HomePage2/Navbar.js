@@ -1,13 +1,14 @@
 import React from 'react';
 import { useTabContext } from './HomePageContext/HomePageContext';
+
 const Navbar = () => {
-  const{fine}=useTabContext()
+  const { fine } = useTabContext();
+
   return (
-    <div className="bg-white-800 text-white p-4">
+    <div className="bg-white text-gray-800 p-4 border-b border-gray-300 sticky top-0 z-50">
       
-      Navbar
     </div>
   );
-}
+};
 
 export default Navbar;
