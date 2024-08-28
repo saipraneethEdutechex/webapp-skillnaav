@@ -46,6 +46,7 @@ const Home = () => {
       salary: '50k per month',
       field: 'Design',
     },
+    // Add other jobs
   ];
 
   const handleViewDetails = (job) => {
@@ -57,10 +58,10 @@ const Home = () => {
   };
 
   const toggleSaveJob = (job) => {
-    if (savedJobs.includes(job)) {
+    if (savedJobs.some(savedJob => savedJob.jobTitle === job.jobTitle)) {
       removeJob(job);
     } else {
-      saveJob(job);
+      saveJob({ ...job, isApplied: false }); // Save the job without applying status
     }
   };
 
@@ -88,7 +89,7 @@ const Home = () => {
                     >
                       <FontAwesomeIcon
                         icon={faHeart}
-                        className={`${savedJobs.includes(job) ? 'text-red-500' : 'text-gray-500'} w-6 h-6`}
+                        className={`w-6 h-6 ${savedJobs.some(savedJob => savedJob.jobTitle === job.jobTitle) ? 'text-red-500' : 'text-gray-500'}`}
                       />
                     </button>
                   </div>

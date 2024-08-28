@@ -20,7 +20,7 @@ const JobCard = ({ searchTerm }) => {
         duration: 'Internship • 3 months',
         salary: '30k per month',
         field: 'Computer science engineering',
-      },
+      }, 
       {
         jobTitle: 'Data Science Intern',
         company: 'Harber Inc',

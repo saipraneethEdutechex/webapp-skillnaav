@@ -1,15 +1,18 @@
 import React from 'react';
 import { useTabContext } from './HomePageContext/HomePageContext'; // Correct path
-import Notifications from './Notifications';
+import Message from './Message';
 import AeronauticalJobs from './AeronauticalJobs';
 import SearchBar from './SearchBar';
 import Home from './Home';
 import Filter from './Filter'; // Import the Filter component
 import SavedJobs from './SavedJobs';
+import Applications from './Applications';
+import Support from './Support';
+import Profile from './Profile'; // Import the Profile component
 
 const BodyContent = () => {
   const { selectedTab, fine, handleSelectTab } = useTabContext();
-  console.log('Selected Tab:', selectedTab);
+  console.log('Selected Tab:', selectedTab); 
 
   let content;
 
@@ -24,19 +27,19 @@ const BodyContent = () => {
       content = <SearchBar />;
       break;
     case 'messages':
-      content = <Notifications />; // Assuming Notifications is for messages
+      content = <Message />; // Assuming Notifications is for messages
       break;
     case 'applications':
-      content = <div>Applications Content</div>;
+      content = <Applications />
       break;
     case 'saved-jobs':
       content = <SavedJobs/>
       break;
     case 'profile':
-      content = <div>Profile Content</div>;
+      content = <Profile/>; // Render the Profile component
       break;
     case 'support':
-      content = <div>Support Content</div>;
+      content = <Support/>;
       break;
     case 'logout':
       content = <div>Logout Content</div>;

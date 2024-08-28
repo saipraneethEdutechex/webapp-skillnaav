@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaHeart, FaShareAlt, FaMapMarkerAlt, FaBriefcase, FaDollarSign } from 'react-icons/fa';
+import { useTabContext } from './HomePageContext/HomePageContext';
 
 const ApplyCards = ({ job, onBack }) => {
+  const { savedJobs, applications, saveJob, removeJob, applyJob } = useTabContext();
+  const [isApplied, setIsApplied] = useState(applications.some(appJob => appJob.jobTitle === job.jobTitle));
+
+  const handleApply = () => {
+    if (!isApplied) {
+      setIsApplied(true);
+      applyJob(job); // Save the job to applications
+    }
+  };
+
+  const toggleSaveJob = () => {
+    if (savedJobs.some(savedJob => savedJob.jobTitle === job.jobTitle)) {
+      removeJob(job);
+    } else {
+      saveJob(job); // Save job to saved jobs
+    }
+  };
+
   return (
     <div className="relative bg-white rounded-lg shadow-lg max-w-full mx-auto p-4 sm:p-6 lg:p-8 xl:p-12 overflow-auto">
       <button className="text-gray-500 text-sm mb-4" onClick={onBack}>&lt; back</button>
@@ -28,14 +47,20 @@ const ApplyCards = ({ job, onBack }) => {
               <FaDollarSign className="mr-2" />
               <p>{job.salary}</p>
             </div>
-            <button className="text-purple-500 bg-purple-100 px-4 py-2 rounded-full font-semibold">
-            Apply now
-          </button>
+            <button
+              onClick={handleApply}
+              className={`text-white ${isApplied ? 'bg-green-500' : 'bg-purple-500 hover:bg-purple-600'} px-4 py-2 rounded-full font-semibold`}
+              disabled={isApplied}
+            >
+              {isApplied ? 'Applied' : 'Apply now'}
+            </button>
           </div>
         </div>
         <div className="flex flex-wrap gap-2 md:gap-4">
-        
-          <FaHeart className="text-gray-400 hover:text-red-400 cursor-pointer" />
+          <FaHeart 
+            className={`text-gray-400 hover:text-red-400 cursor-pointer ${savedJobs.some(savedJob => savedJob.jobTitle === job.jobTitle) ? 'text-red-500' : ''}`}
+            onClick={toggleSaveJob}
+          />
           <FaShareAlt className="text-gray-400 hover:text-blue-400 cursor-pointer" />
         </div>
       </div>
@@ -45,7 +70,8 @@ const ApplyCards = ({ job, onBack }) => {
       <div className="mb-6">
         <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">About the job</h3>
         <p className="text-gray-600 leading-relaxed">
-          {/* Add the job description here */} Accusamus similique repudiandae exercitationem error dolore autem ea
+          {/* Add the job description here */}
+          Accusamus similique repudiandae exercitationem error dolore autem ea
           laborum. Voluptates iste id velit consectetur et a. Rerum ipsum quae.
           Voluptate odit et quo hic rem tempora. Est et consequatur deserunt
           molestias a at quasi dicta. Et sunt maxime at totam ratione.
@@ -67,15 +93,6 @@ const ApplyCards = ({ job, onBack }) => {
           <span className="text-sm bg-gray-200 text-gray-800 py-1 px-3 rounded-full">{job.field}</span>
           {/* Add more skills if needed */}
         </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row mt-6 gap-4">
-        <button className="text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-full font-semibold">
-          Apply now
-        </button>
-        <button className="text-purple-500 bg-white border border-purple-500 hover:bg-purple-100 px-4 py-2 rounded-full font-semibold">
-          Save
-        </button>
       </div>
     </div>
   );
