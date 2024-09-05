@@ -8,12 +8,31 @@ import facebookIcon from "../../assets/Facebook-icon.png";
 import appleIcon from "../../assets/Apple-icon.png";
 import axios from "axios";
 
+// Validation schema for Formik
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Required"),
 });
 
 const CreateAccount = () => {
   const navigate = useNavigate();
+
+  // Function to handle form submission
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      console.log("Submitting values:", values); // Log the submitted data
+      const response = await axios.post("/api/register", values);
+      console.log("Response:", response); // Log the response
+
+      // Redirect to /register after successful account creation
+      navigate("/register");
+    } catch (error) {
+      console.error("Error creating account:", error);
+    }
+    setSubmitting(false); // Ensure the form is not in a submitting state anymore
+  };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen font-poppins">
@@ -30,14 +49,9 @@ const CreateAccount = () => {
             Create an account
           </h1>
           <Formik
-            initialValues={{ email: "" }}
+            initialValues={{ email: "", password: "" }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                setSubmitting(false);
-                navigate("/next-screen");
-              }, 400);
-            }}
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting }) => (
               <Form>
@@ -54,8 +68,24 @@ const CreateAccount = () => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
+
+                <div className="mb-4">
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+
                 <button
                   type="submit"
+                  onClick={() => navigate("/register")}
                   disabled={isSubmitting}
                   className="w-full bg-purple-500 text-white p-3 rounded-lg hover:bg-blue-600 mb-4"
                 >
@@ -64,6 +94,7 @@ const CreateAccount = () => {
               </Form>
             )}
           </Formik>
+
           <div className="flex items-center my-4">
             <hr className="w-full border-t border-gray-300" />
             <span className="px-3 text-gray-500">OR</span>
@@ -95,7 +126,7 @@ const CreateAccount = () => {
           </button>
           <p className="text-center text-gray-500 font-poppins font-medium text-base leading-6">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
+            <a href="/login-acc" className="text-blue-500 hover:underline">
               Login
             </a>
           </p>
