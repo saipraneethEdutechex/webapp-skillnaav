@@ -1,36 +1,47 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState, useContext } from 'react';
 
-// Create a context
-export const HomeContext = createContext();
+const HomePageContext = createContext();
 
-export const HomePageProvider = ({ children }) => {
-    const [selectedCard, setSelectedCard] = useState(null);
+export const TabProvider = ({ children }) => {
+  const [selectedTab, setSelectedTab] = useState('home');
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [applications, setApplications] = useState([]);
 
-    const jobData = [  
-        {
-            jobTitle: 'Data Science Intern',
-            company: 'Harber Inc',
-            location: '439 Metz Field, Canada',
-            remote: true,
-            internship: 'Internship • 3 months',
-            duration: '5d ago',
-            salary: '30k per month',
-            tags: ['Computer science engineering', '+2']
-        },
-        // Add more job data here
-    ];
+  const handleSelectTab = (tab) => {
+    setSelectedTab(tab);
+  };
 
-    const handleCardClick = (card) => {
-        setSelectedCard(card);
-    };
+  const saveJob = (job) => {
+    setSavedJobs((prevJobs) => {
+      const existingJobIndex = prevJobs.findIndex(savedJob => savedJob.jobTitle === job.jobTitle);
+      if (existingJobIndex !== -1) {
+        const updatedJobs = [...prevJobs];
+        updatedJobs[existingJobIndex] = job;
+        return updatedJobs;
+      }
+      return [...prevJobs, job];
+    });
+  };
 
-    const handleCloseApplyCard = () => {
-        setSelectedCard(null);
-    }; 
+  const removeJob = (job) => {
+    setSavedJobs((prevJobs) => prevJobs.filter((j) => j.jobTitle !== job.jobTitle));
+  };
 
-    return (
-        <HomeContext.Provider value={{ jobData, selectedCard, handleCardClick, handleCloseApplyCard }}>
-            {children}
-        </HomeContext.Provider>
-    );
+  const applyJob = (job) => {
+    setApplications((prevJobs) => {
+      const existingJobIndex = prevJobs.findIndex(appJob => appJob.jobTitle === job.jobTitle);
+      if (existingJobIndex !== -1) {
+        return prevJobs;
+      }
+      return [...prevJobs, job];
+    });
+  };
+
+  return (
+    <HomePageContext.Provider value={{ selectedTab, handleSelectTab, savedJobs, saveJob, removeJob, applications, applyJob }}>
+      {children}
+    </HomePageContext.Provider>
+  );
 };
+
+export const useTabContext = () => useContext(HomePageContext);

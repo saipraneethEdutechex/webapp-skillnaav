@@ -1,27 +1,21 @@
-import React from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
-import Homepage from './HomePage';
-import Cards from './Cards';
-import ApplyCards from './JobPosting';
-import { HomePageProvider } from './HomePageContext/HomePageContext';
+  import React from 'react';
+  import Navbar from './Navbar';
+  import Sidebar from './Sidebar';
+  import BodyContent from './BodyContent';
+  import { TabProvider } from './HomePageContext/HomePageContext'; // Correct path
 
-const MainPage = () => {
-  return (
-    <HomePageProvider>
-      <div className="min-h-screen">
-        <Header />
+  const MainPage = () => {
+    return (
+      <TabProvider>
         <div className="flex">
           <Sidebar />
-          <main className="ml-[251px] p-8 w-full">
-            <Homepage />
-            <Cards />
-            <ApplyCards />
-          </main>
+          <div className="flex-1 flex flex-col">
+            <Navbar />
+            <BodyContent />
+          </div>
         </div>
-      </div>
-    </HomePageProvider>
-  );
-};
+      </TabProvider>
+    );
+  };
 
-export default MainPage;
+  export default MainPage;

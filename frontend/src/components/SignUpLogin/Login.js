@@ -35,7 +35,7 @@ const LoginPage = () => {
       const { data } = await axios.post("/api/users/login", values, config);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      navigate("/mainpage2");
+      navigate("/mainpage");
     } catch (err) {
       setLoading(false);
       setError(

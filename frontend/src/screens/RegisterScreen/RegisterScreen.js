@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -22,15 +22,24 @@ const validationSchema = Yup.object({
 
 const RegisterScreen = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Function to handle form submission
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post("/api/users/register", values);
-      navigate("/mainpage2");
+      navigate("/mainpage");
       localStorage.setItem("userInfo", JSON.stringify(response.data));
     } catch (error) {
-      console.error("Error registering user:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Error registering user. Please try again.");
+      }
     }
     setSubmitting(false);
   };
@@ -49,6 +58,13 @@ const RegisterScreen = () => {
           <h1 className="text-2xl font-semibold mb-6 text-center">
             Create an account
           </h1>
+
+          {errorMessage && (
+            <div className="mb-4 p-4 bg-red-100 text-red-800 border border-red-400 rounded">
+              {errorMessage}
+            </div>
+          )}
+
           <Formik
             initialValues={{
               name: "",
