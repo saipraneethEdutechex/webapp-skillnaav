@@ -7,6 +7,7 @@ import createAccountImage from "../../assets/login-image.png"; // Update the pat
 import googleIcon from "../../assets/Google-icon.png";
 import facebookIcon from "../../assets/Facebook-icon.png";
 import appleIcon from "../../assets/Apple-icon.png";
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Ensure to install @heroicons/react
 
 // Validation schema for Formik
 const validationSchema = Yup.object({
@@ -23,6 +24,8 @@ const validationSchema = Yup.object({
 const RegisterScreen = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Function to handle form submission
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -105,13 +108,24 @@ const RegisterScreen = () => {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 relative">
                   <Field
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500" />
+                    )}
+                  </button>
                   <ErrorMessage
                     name="password"
                     component="div"
@@ -119,13 +133,24 @@ const RegisterScreen = () => {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-4 relative">
                   <Field
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     placeholder="Confirm Password"
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOffIcon className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5 text-gray-500" />
+                    )}
+                  </button>
                   <ErrorMessage
                     name="confirmPassword"
                     component="div"

@@ -6,6 +6,8 @@ import loginImage from "../../assets/login-image.png";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import Loading from "../../Warnings/Loading/Loading";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -64,7 +66,7 @@ const LoginPage = () => {
           <h2 className="text-1xl mb-6 text-center">
             Welcome back! Please enter your details
           </h2>
-          
+
           {error && (
             <div className="bg-red-200 text-red-600 p-2 mb-4 text-center rounded">
               {error}
@@ -106,7 +108,10 @@ const LoginPage = () => {
                       className="absolute right-3 top-3 text-gray-600"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? "Hide" : "Show"}
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        size="lg"
+                      />
                     </button>
                     <ErrorMessage
                       name="password"
@@ -156,10 +161,7 @@ const LoginPage = () => {
           />
           <p className="text-center text-gray-500 font-poppins font-medium text-base leading-6">
             Don't have an account?{" "}
-            <Link
-              to="/"
-              className="text-blue-500 hover:underline"
-            >
+            <Link to="/" className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>
