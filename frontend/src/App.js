@@ -5,7 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import CreateAccount from "./components/SignUpLogin/CreateAccount";
 import LoginPage from "./components/SignUpLogin/Login";
 import NextScreen from "./components/SignUpLogin/NextScreen";
-import VerificationCode from "./components/SignUpLogin/VerificationCode";
+import VerificationCode from "./UnusedScreens/VerificationCode";
 import Profilebuilding from "./components/ProfileBuilding/ProfileForm";
 import ProfilePicture from "./components/ProfileBuilding/ProfilePicture";
 
