@@ -1,201 +1,171 @@
-import React, { useState } from "react";
-import axios from "axios";
-import Loading from "../../Warnings/Loading/Loading";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import createAccountImage from "../../assets/login-image.png"; // Update the path as needed
+import googleIcon from "../../assets/Google-icon.png";
+import facebookIcon from "../../assets/Facebook-icon.png";
+import appleIcon from "../../assets/Apple-icon.png";
 
-const RegisterScreen = ({ history }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [profilePic, setProfilePic] = useState(null);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+// Validation schema for Formik
+const validationSchema = Yup.object({
+  name: Yup.string().required("Required"),
+  email: Yup.string().email("Invalid email address").required("Required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Required"),
+});
 
+const RegisterScreen = () => {
   const navigate = useNavigate();
 
-  const validateForm = () => {
-    if (!name || !email || !password || !confirmPassword || !profilePic) {
-      setError("All fields are required.");
-      return false;
-    }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return false;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return false;
-    }
-    setError("");
-    return true;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("profilePic", profilePic);
-
+  // Function to handle form submission
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        "/api/users/register",
-        {
-          name,
-          profilePic,
-          email,
-          password,
-        },
-        config
-      );
-      setLoading(false);
+      const response = await axios.post("/api/users/register", values);
       navigate("/mainpage2");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
     } catch (error) {
-      setError(error.response.data.message);
+      console.error("Error registering user:", error);
     }
+    setSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-semibold text-center text-gray-700">
-          Register
-        </h2>
-
-        {error && (
-          <div className="bg-red-200 text-red-600 p-2 mt-4 text-center rounded">
-            {error}
-          </div>
-        )}
-        {message && (
-          <div className="bg-green-200 text-green-600 p-2 mt-4 text-center rounded">
-            {message}
-          </div>
-        )}
-
-        {loading ? (
-          <Loading />
-        ) : (
-          <form
+    <div className="flex flex-col lg:flex-row min-h-screen font-poppins">
+      <div className="hidden lg:flex lg:w-1/2 items-center justify-center">
+        <img
+          src={createAccountImage}
+          alt="Create Account"
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center p-8 w-full lg:w-1/2 bg-white">
+        <div className="w-full max-w-md flex flex-col justify-center min-h-screen lg:min-h-full">
+          <h1 className="text-2xl font-semibold mb-6 text-center">
+            Create an account
+          </h1>
+          <Formik
+            initialValues={{
+              name: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={validationSchema}
             onSubmit={handleSubmit}
-            className="mt-4"
-            encType="multipart/form-data"
           >
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-gray-600"
-                htmlFor="name"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
+            {({ isSubmitting }) => (
+              <Form>
+                <div className="mb-4">
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <ErrorMessage
+                    name="name"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
 
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-gray-600"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+                <div className="mb-4">
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
 
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-gray-600"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
-                placeholder="Enter your password"
-                required
-              />
-            </div>
+                <div className="mb-4">
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
 
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-gray-600"
-                htmlFor="confirmPassword"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
+                <div className="mb-4">
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
 
-            <div className="mb-4">
-              <label
-                className="block text-sm font-medium text-gray-600"
-                htmlFor="profilePic"
-              >
-                Profile Picture
-              </label>
-              <input
-                type="file"
-                id="profilePic"
-                onChange={(e) => setProfilePic(e.target.files[0])}
-                className="w-full mt-2 text-gray-700 bg-gray-100 border rounded-lg focus:outline-none"
-                accept="image/*"
-                required
-              />
-            </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-purple-500 text-white p-3 rounded-lg hover:bg-purple-600 mb-4"
+                >
+                  Register
+                </button>
+              </Form>
+            )}
+          </Formik>
 
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-            >
-              Register
-            </button>
-          </form>
-        )}
+          <div className="flex items-center my-4">
+            <hr className="w-full border-t border-gray-300" />
+            <span className="px-3 text-gray-500">OR</span>
+            <hr className="w-full border-t border-gray-300" />
+          </div>
 
-        <p className="mt-4 text-sm text-center text-gray-600">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500">
-            Login
-          </a>
-        </p>
+          <button className="w-full bg-white text-gray-800 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 mb-4 flex items-center justify-center">
+            <span className="mr-2">
+              <img src={googleIcon} alt="Google" className="h-5 w-5" />
+            </span>
+            <span className="font-poppins font-semibold text-base leading-6">
+              Sign Up with Google
+            </span>
+          </button>
+          <button className="w-full bg-white text-gray-800 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 mb-4 flex items-center justify-center">
+            <span className="mr-2">
+              <img src={facebookIcon} alt="Facebook" className="h-5 w-5" />
+            </span>
+            <span className="font-poppins font-semibold text-base leading-6">
+              Sign Up with Facebook
+            </span>
+          </button>
+          <button className="w-full bg-white text-gray-800 p-3 rounded-lg border border-gray-300 hover:bg-gray-100 mb-4 flex items-center justify-center">
+            <span className="mr-2">
+              <img src={appleIcon} alt="Apple" className="h-5 w-5" />
+            </span>
+            <span className="font-poppins font-semibold text-base leading-6">
+              Sign Up with Apple
+            </span>
+          </button>
+
+          <p className="text-center text-gray-500 font-poppins font-medium text-base leading-6">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500 hover:underline">
+              Login
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -126,7 +126,7 @@ const CreateAccount = () => {
           </button>
           <p className="text-center text-gray-500 font-poppins font-medium text-base leading-6">
             Already have an account?{" "}
-            <a href="/login-acc" className="text-blue-500 hover:underline">
+            <a href="/login" className="text-blue-500 hover:underline">
               Login
             </a>
           </p>
