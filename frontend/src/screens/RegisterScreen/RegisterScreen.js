@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Loading from "../../Warnings/Loading/Loading";
+import { useNavigate } from "react-router-dom";
 
 const RegisterScreen = ({ history }) => {
   const [name, setName] = useState("");
@@ -11,6 +12,8 @@ const RegisterScreen = ({ history }) => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     if (!name || !email || !password || !confirmPassword || !profilePic) {
@@ -56,6 +59,7 @@ const RegisterScreen = ({ history }) => {
         config
       );
       setLoading(false);
+      navigate("/mainpage2");
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       setError(error.response.data.message);
